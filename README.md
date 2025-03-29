@@ -42,8 +42,8 @@ les messages vont etre garder et stocker (durable) dans un topic , on peut faire
 -permet le real time processing : le big data (comment stocker les données d'une façon distribué dans plusieurs machine et comment utiliser ses machinss pour traiter ce grand nombre des données  , donc il y a le stockage et le traitement) 
 ![image](https://github.com/user-attachments/assets/14766bac-80d3-4228-9f4d-fe5e2e326317)
 
-
--- hors event driven
+--------------------------------------------------------------------hors event driven---------------------------------------------
+-- 
 *********stockage distribué: on utilise ses bases de donnée , on enregsite ligne par ligne dans chaque machine(example ligne1 dans une machine , ligne2 dans une autre mahcine) , ou colonne par colone dans chaque machine (example colonne user dans une machine , colonne client dans une autre machine)
 -MONGO DB : orienté ligne (docuement)
 -CASANDRA : orienté colonne
@@ -60,6 +60,10 @@ les messages vont etre garder et stocker (durable) dans un topic , on peut faire
 spark pour grand volume de donneé, spring batch pour un volume moyen.
 *** Stream processing:
 traiter les données en temps reel (pas des données dans le passé), au fur et au mesure que je recoit les donneés , je vais le traitement , faire des analyses et prise de descion 
+
+----------------------------------------------------------------------------------------------------------
+
+![image](https://github.com/user-attachments/assets/1521fadf-9866-4805-a211-e36954690d8d)
 
 
 
