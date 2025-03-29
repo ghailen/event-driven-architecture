@@ -43,4 +43,17 @@ les messages vont etre garder et stocker (durable) dans un topic , on peut faire
 ![image](https://github.com/user-attachments/assets/14766bac-80d3-4228-9f4d-fe5e2e326317)
 
 
+-- hors event driven
+stockage distribué on utilise ses bases de donnée , on enregsite ligne par ligne dans chaque machine(example ligne1 dans une machine , ligne2 dans une autre mahcine) , ou colonne par colone dans chaque machine (example colonne user dans une machine , colonne client dans une autre machine)
+-MONGO DB : orienté ligne (docuement)
+-CASANDRA : orienté colonne
+(distribution des tables par colonne ou par ligne) , chaque sgbd a son propre stategrie de distribution.
+-NEO4J : orienté graphe dans le cas des reseaux socieaux (resueaux sociaux utilise les graphes , stock les données sous forme des graphoes ) theorie de graphie , il checher les liens, les relations entre les utlisateurs. (le chemin le plus rapide ) aussi les applications de geolocalisation , (de cours chemin ) comme waze,, linkedin neo4j
+-Elastic search: sgbd orienté texte , permet de creer des moteurs de recherche,qui permet de chercher par texte pour recurper les documents facilement.
+-REDIS (sgbd no sql il est aussi) : ditribue les données sous forme de clé valeur , trés pratique pour creer un cache distribué , cache mémoire. (dans architecture mciroservice utilisé aussi)
+
+
+
+
+
 
