@@ -65,8 +65,21 @@ traiter les données en temps reel (pas des données dans le passé), au fur et 
 
 ![image](https://github.com/user-attachments/assets/1521fadf-9866-4805-a211-e36954690d8d)
 
+![image](https://github.com/user-attachments/assets/276488e2-73a7-47a7-9a2d-35d194f8229b)
 
+cluster : plusieurs machine.
+zookeepr : coordinateur entree les differentes instances du clusrer  , puisqu'on se base sur un cluster , le broker doit etre tolerant au panne .
 
-
+On suppose qu'on a un livre avec 100000 pages, et on a 10 personnes. 
+on suppose on a 100 partitions ,donc on va diviser les 100000 pages à 100 partitions , du coup il y a aura 1000 pages à distribué , du coup on va disrtribué les 1000 pages au 10 personnes
+cahque personne va prendre 100 partition.. 
+=> partitionner pour distribuer.
+par exemple la personne 1 va prendre la partition 1 jursqu'au 10 , personne 2 va prenddre la partition 11 vers la partition 20 ...
+maintenant si personne 1 va tomber en panne (machine) on va perdre ces partitions(les informatiosn).
+mais il y a le terme replication.  les partitions de la personne 1 vont avoir une copie dans une autre personne 2 ou 3 .
+replica -> creer des copies. => pour resoudre la probleme de tolerance au panne.
+pour conculre :
+-partitionner , c'est pour distribuer.
+-repliquer , c'est pour resoudre le probleme de torelance au panne.
 
 
