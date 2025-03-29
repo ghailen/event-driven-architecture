@@ -70,22 +70,26 @@ traiter les données en temps reel (pas des données dans le passé), au fur et 
 cluster : plusieurs machine.
 zookeepr : coordinateur entree les differentes instances du clusrer  , puisqu'on se base sur un cluster , le broker doit etre tolerant au panne .
 
-On suppose qu'on a un livre avec 100000 pages, et on a 10 personnes. 
-on suppose on a 100 partitions ,donc on va diviser les 100000 pages à 100 partitions , du coup il y a aura 1000 pages à distribué , du coup on va disrtribué les 1000 pages au 10 personnes
+On suppose qu'on a un livre avec 100000 pages, et on a 10 personnes (correspond au machine). 
+on suppose on a 100 partitions(crées) ,donc on va diviser les 100000 pages à 100 partitions , du coup il y a aura 1000 pages à distribué , du coup on va disrtribué les 1000 pages au 10 personnes
 cahque personne va prendre 100 partition.. 
 => partitionner pour distribuer.
 par exemple la personne 1 va prendre la partition 1 jursqu'au 10 , personne 2 va prenddre la partition 11 vers la partition 20 ...
 maintenant si personne 1 va tomber en panne (machine) on va perdre ces partitions(les informatiosn).
 mais il y a le terme replication.  les partitions de la personne 1 vont avoir une copie dans une autre personne 2 ou 3 .
 replica -> creer des copies. => pour resoudre la probleme de tolerance au panne.
-pour conculre :
--partitionner , c'est pour distribuer.
--repliquer , c'est pour resoudre le probleme de torelance au panne.
 
 maintneant on suppose que la personne 1 tombe en panne. qui va demander au personne 2 de fournier la copie de la personne 1 qui est malade ou tombé en panne (machine) .
 => c'est zookeeper qui le coordinateur. c'est lui qu va déja demander de repliquer les partietions de P1 dans P2 et P3 , et de P3 dans P5 et P6 ... aprés si quelqu'un tombe on panne c'est lui qui interroge la personne concerné pour fournir la copie. et si un autre P11 qui vient d'etre ajouter , chaque autre personne va donner 2 partitions de leur partition au nouveau personne 11 et on va repartir les partitions vers le nouveau personne et les autres et aussi reassosie les copies.
-=> ça c'est la scalabilité: c'est lorsqu'une nouvelle machine qui arrive il faut repartir les partitions sur les nouvelles machines. et le systeme devient plus rapide.
+=> ça c'est la scalabilité: c'est lorsqu'une nouvelle machine ou instance qui arrive il faut repartir les partitions sur les nouvelles machines. et le systeme devient plus rapide.
 zookeeper qui fait ça , qui permet de gerer les differentes instance de broker.
+pour conculre :
+-partitionner , c'est pour distribuer.
+-repliquer , c'est pour resoudre le probleme de torelance au panne.
+-scalabilité: le system est scalabe expliqué dessus.
+pour garantir la scalabilité , il faut avoir plusieurs partitions.  puisque si on a que 10 partitions . donc chaque personne va prendre qu'une seule partiton à la fois , si on va ajouter une nouvelle personne on pas pas l'affecter une partition , donc le systeme ne plus scalabale. => il faut plusieurs partitions.
+![image](https://github.com/user-attachments/assets/7920f518-4547-4f48-9cda-f2afcd960cf9)
+
 
 
 
