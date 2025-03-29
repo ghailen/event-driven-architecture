@@ -18,6 +18,7 @@ si on a deux consumers c1 et c2 qui ecoutent la meme queue , il y aura un tour d
 Topic: si le producer envoie 4 messages , les deux consommateurs C1 et C2 chacun va recevoir 4 messages.
 
 =======================***JMS***===========================
+
 creer un consumer avec JMS: en utilisant spring
 ![image](https://github.com/user-attachments/assets/ac866d05-312d-4a18-87d6-74147290583d)
 si tu veux creer avec JAVA core native , il faut passer par la session factory (dans spring toute est fait et caché par @JmsListener) ... comme c'est mentionnée dans le modele partagé en haut.
@@ -27,8 +28,19 @@ si tu veux creer avec JAVA core native , il faut passer par la session factory (
 jboss, weblogic ... tous fournit une implementation jms
 
 =====================***KAFKA***=======================
+
 sur jms (technique de push), si le producer envoie 1000 message au broker et il y a un cosumateur par exemple C1 qui est connecté et fait un subscribe au broker, ce consumer c1 va consommer tous les 1000 messages directement, (technique de push) , dés que le broker envoie le message au consomateur, il recoit un acquittement de reception et aprés il supprime le message de la file d'attente. 
 =>l'inconvenient : le consumer peut etre deborder, pusiqu'il va recevoir plusierus messages au meme temps , donc si le consumer n'as de ressrouce pour stocker les messages et traiter il va finir par etre deborder.
+
+sur kafka (technique de pull) , c'est le consumer qui decide qu'on est ce qu'il veut lire le message et avec quel debit.
+les messages dans kafka peut etre reconsommer, kafka peut jouer le role de event store. sur une architectue micro service par exemple on peut stocker et generer des audits dans kafka à partir des events stocké.
+
+![image](https://github.com/user-attachments/assets/0d215e09-f6bd-4ec7-aabd-994154713f87)
+
+broker c'est je recoit le message et je delivre le message
+les messages vont etre garder et stocker (durable) dans un topic , on peut faire des audits avec ...
+-permet le real time processing : le big data (comment stocker les données d'une façon distribué dans plusieurs machine et comment utiliser ses machinss pour traiter ce grand nombre des données  , donc il y a le stockage et le traitement) 
+![image](https://github.com/user-attachments/assets/14766bac-80d3-4228-9f4d-fe5e2e326317)
 
 
 
