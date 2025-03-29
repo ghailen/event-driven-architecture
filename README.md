@@ -82,4 +82,12 @@ pour conculre :
 -partitionner , c'est pour distribuer.
 -repliquer , c'est pour resoudre le probleme de torelance au panne.
 
+maintneant on suppose que la personne 1 tombe en panne. qui va demander au personne 2 de fournier la copie de la personne 1 qui est malade ou tombé en panne (machine) .
+=> c'est zookeeper qui le coordinateur. c'est lui qu va déja demander de repliquer les partietions de P1 dans P2 et P3 , et de P3 dans P5 et P6 ... aprés si quelqu'un tombe on panne c'est lui qui interroge la personne concerné pour fournir la copie. et si un autre P11 qui vient d'etre ajouter , chaque autre personne va donner 2 partitions de leur partition au nouveau personne 11 et on va repartir les partitions vers le nouveau personne et les autres et aussi reassosie les copies.
+=> ça c'est la scalabilité: c'est lorsqu'une nouvelle machine qui arrive il faut repartir les partitions sur les nouvelles machines. et le systeme devient plus rapide.
+zookeeper qui fait ça , qui permet de gerer les differentes instance de broker.
+
+
+
+
 
