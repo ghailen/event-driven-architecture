@@ -44,13 +44,21 @@ les messages vont etre garder et stocker (durable) dans un topic , on peut faire
 
 
 -- hors event driven
-stockage distribué on utilise ses bases de donnée , on enregsite ligne par ligne dans chaque machine(example ligne1 dans une machine , ligne2 dans une autre mahcine) , ou colonne par colone dans chaque machine (example colonne user dans une machine , colonne client dans une autre machine)
+*********stockage distribué: on utilise ses bases de donnée , on enregsite ligne par ligne dans chaque machine(example ligne1 dans une machine , ligne2 dans une autre mahcine) , ou colonne par colone dans chaque machine (example colonne user dans une machine , colonne client dans une autre machine)
 -MONGO DB : orienté ligne (docuement)
 -CASANDRA : orienté colonne
 (distribution des tables par colonne ou par ligne) , chaque sgbd a son propre stategrie de distribution.
 -NEO4J : orienté graphe dans le cas des reseaux socieaux (resueaux sociaux utilise les graphes , stock les données sous forme des graphoes ) theorie de graphie , il checher les liens, les relations entre les utlisateurs. (le chemin le plus rapide ) aussi les applications de geolocalisation , (de cours chemin ) comme waze,, linkedin neo4j
 -Elastic search: sgbd orienté texte , permet de creer des moteurs de recherche,qui permet de chercher par texte pour recurper les documents facilement.
 -REDIS (sgbd no sql il est aussi) : ditribue les données sous forme de clé valeur , trés pratique pour creer un cache distribué , cache mémoire. (dans architecture mciroservice utilisé aussi)
+
+****** traitement distribué:
+-batch processing : je traite les données dans le passé, par exemple la fin de ce mois je traite tous les données de ce mois, aussi par exemple pour la jourée d'hier , je traite les données la fin de soirée de la journée d'hier., pour l'année , je traite les données de toute l'année à la fin. (Spring batch mais il n'est pas distribué)
+-le spring batch est la meilleure solution, mais si on dépasse 4 heures de delai d'execution de job , ça n'est pas bien.
+-map reduce: il est ancien il permet de decouper les données et les envoyers dans plusieurs machines et aprés il les recuperes et les regroupes; mais limité.
+-spark est plus interessant: permert de faire le batch processing d'une maniére distribué , on a besoin d'un cluster pour travailler avec spark , c'est pour cela on voit HDFS dans le schéma .
+*** Stream processing:
+traiter les données en tant reel, au fur et au mesure que je recoit les donneés , je vais le traitement , faire des analyses et prise de descion 
 
 
 
