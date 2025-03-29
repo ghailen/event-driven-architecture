@@ -118,7 +118,12 @@ si on va demarrer un cluster (ç a d plusieurs broker)  => là c'est difficile m
 ![image](https://github.com/user-attachments/assets/19383de0-f913-4135-b0c1-48afd4e8f399)
 
 => on va creer 3 instance de zookeper et 3 instance de kafka
+lancement avec docker-compose up
+![image](https://github.com/user-attachments/assets/3eca2587-b2a1-4cc1-b823-5e62e776e4eb)
 
+travail avec spring:
+![image](https://github.com/user-attachments/assets/179ce354-fc92-4458-aabd-36dfd8760d61)
+=> un consumer doit appartenir à un groupe (groupe id ) puisque si deux consumers appratient à un seul groupe , un seul consumer va lire le message. (cas queue)
 
 
 
