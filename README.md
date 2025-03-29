@@ -90,7 +90,34 @@ pour conculre :
 pour garantir la scalabilité , il faut avoir plusieurs partitions.  puisque si on a que 10 partitions . donc chaque personne va prendre qu'une seule partiton à la fois , si on va ajouter une nouvelle personne on pas pas l'affecter une partition , donc le systeme ne plus scalabale. => il faut plusieurs partitions.
 ![image](https://github.com/user-attachments/assets/7920f518-4547-4f48-9cda-f2afcd960cf9)
 
+dans jms on parle de topic et de queue.
+dans kafka on parle tjs de topic, mais dans le topic on peut implementer les deux protocoles queue et topic grace à la notion de groupe.
+chaque consumer kafka doit appartenir à un groupe.
+il faut savoir il le produce envoie le message, le message est envoyé vers le groupe
+le groupe A va recevoir le message et le groupe B va recevoir le meme message. mais à l'intérieur de groupe il y a un seul qui va recevoir le message.
+si le groupe A receoit le message il y a que le C1 qui recupere le message et dans le groupe B il ya que le C3 qui recupere le message -> c'est le topic. , c'est one to many ,  puisque les groupes sont different les deux C1 et C3 vont consommer le message
+si les consomatteurs C1 et C2 sont dans le meme groupe , alors c'est qu'un seule C1 ou C2 vont consommerr puisqu'ils sont dans le meme groupe => le queue
+![image](https://github.com/user-attachments/assets/79e30d8c-cfb2-4afd-9dac-31b28028f684)
 
+
+
+*****************************************************INSTALLATION:***********************************************************
+![image](https://github.com/user-attachments/assets/a084b423-053c-46dc-aef4-c6d4d3dde8dd)
+![image](https://github.com/user-attachments/assets/704c93e1-4609-43b9-a737-97d2015ef78e)
+
+il faut demarrer zookeeper d'abord sinon kafka il va pas marcher.
+![image](https://github.com/user-attachments/assets/af5bafbb-d166-45e1-890a-e30243dc5069)
+=> un replica et et un partition selon les parameters fournit.
+pour tester :
+![image](https://github.com/user-attachments/assets/925047e6-fc32-430d-a7fd-53b51a41b459)
+
+si on va demarrer un cluster (ç a d plusieurs broker)  => là c'est difficile manuellement, il faut utiliser docker:
+![image](https://github.com/user-attachments/assets/54abfdf2-9b98-44b3-8c88-7b8983acc40f)
+![image](https://github.com/user-attachments/assets/a99478dc-06e5-4616-bbf2-638b42be09df)
+![image](https://github.com/user-attachments/assets/168bc628-835d-4076-9fb0-0a204c84790e)
+![image](https://github.com/user-attachments/assets/19383de0-f913-4135-b0c1-48afd4e8f399)
+
+=> on va creer 3 instance de zookeper et 3 instance de kafka
 
 
 
