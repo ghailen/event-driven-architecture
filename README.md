@@ -124,6 +124,10 @@ lancement avec docker-compose up
 travail avec spring:
 ![image](https://github.com/user-attachments/assets/179ce354-fc92-4458-aabd-36dfd8760d61)
 => un consumer doit appartenir à un groupe (groupe id ) puisque si deux consumers appratient à un seul groupe , un seul consumer va lire le message. (cas queue)
+@KafkaLister permet de consomer le message, ; KafkaTempalte permet de produire le message. 
+mais si on va utiliser rabbit mq ou jms , ça va pas marcher puisque c'est annotation et classe est dédié pour kafka 
+=> on peut utiliser spring cloud stream, qui va fournrir des interfaces qui vont fonctionner qlq soit le type du broker.
+
 
 
 
