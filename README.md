@@ -129,5 +129,58 @@ mais si on va utiliser rabbit mq ou jms , ça va pas marcher puisque c'est annot
 => on peut utiliser spring cloud stream, qui va fournrir des interfaces qui vont fonctionner qlq soit le type du broker.
 
 
+ce Schema presente ce qu on va faire:
+on va produire des pages event.
+On va creer un api qui joue le role d'un produceer.
+un consumer
+un kafka streams qui va etre l'ecoute de supplier qu'on va le creer qui va tourner chaque 1 seconde pour publier des infos page event:
+![image](https://github.com/user-attachments/assets/745457f5-4061-44ab-864a-80539b9b0b9b)
+
+et on va afficher une courbe en temps reel comme ça  (data analytics par kafka streams): 
+![image](https://github.com/user-attachments/assets/39cdc153-126f-43fb-9569-8dea2fb5d135)
+
+en rouge page P2 , en vert page P1.
+
+on commence par l'application spring:
+-------creer un producer:
+![image](https://github.com/user-attachments/assets/2f8591e0-6c5b-454d-bea9-b54f421e51f9)
+on va utiliser StreamBridge: si on va inserer un message dans un topic 
+generalement ce qu'on va publier sur kafka c'est du json (le PageEvent)
+il y a deux solutions soit on utilisant KafkaTemplate(compatible avec Kafka) soit StreamBridge (spring cloud stream, ça va marcher avec n'importe quel broker ...rabitmq...)
+----pour creer un consumer maintenant:
+![image](https://github.com/user-attachments/assets/2027e19b-2180-42ee-b3bf-5aaadd3007df)
+il suffit de creer un bean de type Consumer
+et dans application.properties :
+on utilise : spring.cloud.stream.bindings.pageEventConsumer-in-0.destination=R1
+in c'est input , pageEventConsumer c'est le nom de bean, , R1 c'est le nom de topic
+dés qu'on recoit un message sur le topic R1, on va le consomer et la variable output qui va contenir le message.
+---pour creer un supplier:
+![image](https://github.com/user-attachments/assets/0c50d78e-5907-4a88-a100-111335644327)
+
+le supplier qui va etre lancer chaque 100 ms selon le propertie dans application.properties.
+chaque 100ms il va creer un objet PageEvent et le publier dans le topic R2 
+le topic ou il va inserer est R2.
+c'est comme si un capteur.
+dans le console , on voit chaque une 100 ms un message sous format json.
+
+------- pour creer un kafka streams:
+![image](https://github.com/user-attachments/assets/f81bdebf-7d20-4905-8e70-fe163b1fcee6)
+
+on va recevoir les inputs depuis le topic R2 
+on va utilise Function , pour KStream<String,Double>, le double utilisé pour genrer une valeur utilsié pour statisques.
+
+
+windowsBy (operation de fenetrage)  ç a d dans les statisque je vais prnedre que les données que j'ai vu avant 30 seconde par exemple. => la moyenne affiché dans l'ecran c est les moyen de pageEvent de 30 derniers seconds en temps reel  => c'est obligatoire ce parameters dans le streaming.
+aprés on va renvoyer les données (le stream) vers la topic R4.
+le calcul va etre stocker dans une table nommé "count-store"
+et aprés on va creer un rest api controller qui lit le count-store et affiche dans le front end.
+![image](https://github.com/user-attachments/assets/8cfad980-c368-4a10-b741-4108df8a91bc)
+![image](https://github.com/user-attachments/assets/8376d582-d11d-4772-b46c-ddd60133a646)
+
+
+========================*****TP***==================================================
+====================================================================================
+
+
 
 
