@@ -246,6 +246,60 @@ si on va regler le timer et mettre de 200 ms:
 spring.cloud.stream.bindings.pageEventSupplier-out-0.producer.poller.fixed-delay=200
 
 maintenant on va faire du traitement en temps reel , le stream processing avec kafka stream , puisqu'on a des donneés chaque 200ms. qui contient des durations de visites sur lesquel on va se baser
+on va ajouter un kafka stream: et on creer un Function
+![image](https://github.com/user-attachments/assets/e7e0e803-197f-46a3-ac19-2d5e46885115)
+
+le kafka stream va prendre les données de supplier de T3 et le faire le stream et les operations necssaire et les renvoyer à T4
+![image](https://github.com/user-attachments/assets/a0a50235-f16d-4ea0-b3ad-fc45aafdb9c7)
+
+on doit restarer l'application encore une autre fois.
+et on doit lancer un autre commande pour ecouter (listen) au queue T4 , puisque c'est avec Kafka Stream. ( print.key=true -> on va ajouter la clé en parameter puisqe ce n'est affiché avant,
+property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer pour deserialiser la clé , et value.deserializer=org.apache.kafka.common.serialization.LongDeserializer pour
+desiialsé la valeur qui est de type long puisque la duration est de type long)
+=> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T4 --property print.key=true --property print.value=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+
+![image](https://github.com/user-attachments/assets/59f72535-0dd5-4201-95a3-4b56dee206b5)
+
+toute est bien,
+
+maintenant on va ajouter des traitements dans le kafka stream poour l'analytics:
+du coup o n ajouter un group by clé , et count et stream pour l'afficher.
+![image](https://github.com/user-attachments/assets/a9568b0d-91d5-4c30-971e-648a3cc59e25)
+et on relance: ça va prendre un peu de temps pour faire le calcul (30 seconde par defaut pour voir le resultat):
+pour calculer le temps de visite
+![image](https://github.com/user-attachments/assets/e3da58fb-a8d6-445e-a18b-74ecaadf5784)
+pour changer la durée 30 seconde et avoir des resultats rapidement on ajoute ça :
+spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000
+ça devient plus rapide, chaque 1 secondes:
+![image](https://github.com/user-attachments/assets/948de9b1-6625-450f-99c6-45e9714ff8fd)
+
+le nombre de visite a augemente puisqu'on fait le cumul de visite.
+maintenant on va ajouter la tendance chaque 5 secondes; par exemple la page P1 est visité x fois pendant les 5 secondes (donc on va ajouter les operateurs de fenetrages)
+=> le count va concerné que les 5 derniers secondes.
+![image](https://github.com/user-attachments/assets/9cb567b6-9278-441e-a4d8-c7eb4ed8ec46)
+
+maintenant losqu'on va faire des operations des aggregations on va ajouter dans le count and Materlized pour publier en memoire une table count-store ou on va stocker les resulats:
+maintenant on va creer un api qui recupere les informations de count-store et l'envoyer vers le front end.
+![image](https://github.com/user-attachments/assets/fb688ce7-a6f9-48a8-95e1-7ec8a5dcd9c9)
+
+on redemarre l'application et si on tape sur l'api:
+http://localhost:8080/analytics
+![image](https://github.com/user-attachments/assets/94791e74-5dd2-4cee-b9d8-9c4e16c304cc)
+et ça vient de ces valeurs:
+![image](https://github.com/user-attachments/assets/f093f554-b6b6-4302-9c1a-28f227ec126f)
+
+en utilisant flux l'api est tjs on excution et il renvoie des donneés.
+maintenant on va creer une page index.html dans le dossier static ,et on va utiliser smoothie js pour afficher les courbes.
+et on entre dans la page:
+http://localhost:8080/index.html
+si on remarque ici : P1 est en vert et P2 est en rouge.
+![image](https://github.com/user-attachments/assets/7169111c-873c-49a0-b7be-e7e11d143f25)
+
+
+
+
+
+
 
 
 
