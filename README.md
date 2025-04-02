@@ -180,6 +180,43 @@ et aprés on va creer un rest api controller qui lit le count-store et affiche d
 
 ========================*****TP***==================================================
 ====================================================================================
+creeer un nouveau projet spring , java17 avec ce depedances: 
+![image](https://github.com/user-attachments/assets/e44527c5-8e6f-464b-8428-ec2b3f3b1ffa)
+
+let s prepare the docker compose file:
+![image](https://github.com/user-attachments/assets/07b2a3d0-b643-4e33-a52a-db015de8a805)
+
+then use command : docker compose up
+![image](https://github.com/user-attachments/assets/2982c880-74a3-480f-af38-c3ff43a4f386)
+![image](https://github.com/user-attachments/assets/d16c3d41-7c2b-482c-b317-6ffc715b9bff)
+
+ou bien si tu veux ne pas passer par docker:
+![image](https://github.com/user-attachments/assets/7f87e294-e027-4682-873f-f6680c9bb022)
+
+on execute la premier commande sur docker:
+le consumer:
+> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T1
+le producer:
+> docker exec --interactive --tty bdcc-kafka-broker kafka-console-producer --bootstrap-server broker:9092 --topic T1
+
+dans le producer on va taper "Hello"
+![image](https://github.com/user-attachments/assets/03f29914-8ab8-4368-bdd2-5ad6342559a9)
+et dans le consumer on remarque que le mot Hello apparu:
+![image](https://github.com/user-attachments/assets/732217cc-4757-45e4-9047-2c23bab4e8a7)
+
+le consumer utilise la technique de pulling du coup ça prend plus moins une seconde pour consomer le message
+
+si vous voulez consomer les messages depuis le debut : il faut ajouter dans la commande de consumer : --from-beginning
+=> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T1 --from-beginning
+![image](https://github.com/user-attachments/assets/555c4634-a9a4-462d-aba6-0383ecebcb75)
+
+on lance notre application sur le port 8080 :
+et on fait un appel api via le navigtauer:
+![image](https://github.com/user-attachments/assets/8eb14e51-d2a0-4074-a10f-63e47a40db72)
+
+on va lancer un consumer sur un topic T2 pour voir si on a bien reçu le message:
+on doit relancer l'api et on remarque qu'on a bien reçu le message dans T2:
+![image](https://github.com/user-attachments/assets/f7229e08-9784-4dac-8902-d87d565bf1c1)
 
 
 
