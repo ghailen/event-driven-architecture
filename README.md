@@ -180,6 +180,126 @@ et aprés on va creer un rest api controller qui lit le count-store et affiche d
 
 ========================*****TP***==================================================
 ====================================================================================
+creeer un nouveau projet spring , java17 avec ce depedances: 
+![image](https://github.com/user-attachments/assets/e44527c5-8e6f-464b-8428-ec2b3f3b1ffa)
+
+let s prepare the docker compose file:
+![image](https://github.com/user-attachments/assets/07b2a3d0-b643-4e33-a52a-db015de8a805)
+
+then use command : docker compose up
+![image](https://github.com/user-attachments/assets/2982c880-74a3-480f-af38-c3ff43a4f386)
+![image](https://github.com/user-attachments/assets/d16c3d41-7c2b-482c-b317-6ffc715b9bff)
+
+ou bien si tu veux ne pas passer par docker:
+![image](https://github.com/user-attachments/assets/7f87e294-e027-4682-873f-f6680c9bb022)
+
+on execute la premier commande sur docker:
+le consumer:
+> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T1
+le producer:
+> docker exec --interactive --tty bdcc-kafka-broker kafka-console-producer --bootstrap-server broker:9092 --topic T1
+
+dans le producer on va taper "Hello"
+![image](https://github.com/user-attachments/assets/03f29914-8ab8-4368-bdd2-5ad6342559a9)
+et dans le consumer on remarque que le mot Hello apparu:
+![image](https://github.com/user-attachments/assets/732217cc-4757-45e4-9047-2c23bab4e8a7)
+
+le consumer utilise la technique de pulling du coup ça prend plus moins une seconde pour consomer le message
+
+si vous voulez consomer les messages depuis le debut : il faut ajouter dans la commande de consumer : --from-beginning
+=> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T1 --from-beginning
+![image](https://github.com/user-attachments/assets/555c4634-a9a4-462d-aba6-0383ecebcb75)
+
+on lance notre application sur le port 8080 :
+et on fait un appel api via le navigtauer:
+![image](https://github.com/user-attachments/assets/8eb14e51-d2a0-4074-a10f-63e47a40db72)
+
+on va lancer un consumer sur un topic T2 pour voir si on a bien reçu le message:
+on doit relancer l'api et on remarque qu'on a bien reçu le message dans T2:
+![image](https://github.com/user-attachments/assets/f7229e08-9784-4dac-8902-d87d565bf1c1)
+
+
+maintenant on va creer un consumer coté spring:
+![image](https://github.com/user-attachments/assets/6bf26000-280f-4556-9a4a-58f487d86c0a)
+on va creer un bean (ç a  d il va etre charger au demarrage de l'application) 
+on va creer un objet consumer qui va faire un subscire sur un topic, il faut mettre le topic dans properties qui va etre consomer.
+spring.cloud.stream.bindings.pageEventConsumer-in-0.destination=T2
+&& spring.cloud.function.definition=pageEventConsumer
+![image](https://github.com/user-attachments/assets/40a57cda-66d8-43c2-aa64-fb328af0e31f)
+
+
+on relancer l'api, et on va remarquer que le message est bien consomé :
+![image](https://github.com/user-attachments/assets/06e4657b-e3b8-4321-b492-e836591f6826)
+
+-------------------on va creer un supplier maintenant qui va jouer le role d'un producer qui va pusher un message à chaque minute ou seconde selon les donneés fournit en parameter----
+![image](https://github.com/user-attachments/assets/95cae349-613c-4173-be96-9538092221d2)
+et dans properties:
+spring.cloud.stream.bindings.pageEventSupplier-out-0.destination=T3
+&& spring.cloud.function.definition=pageEventConsumer;pageEventSupplier
+![image](https://github.com/user-attachments/assets/fe124418-46e5-4883-814a-64bae965f8f7)
+
+on redemarrer l'application et on va creer un consumer qui va lire de T3:
+docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T3
+![image](https://github.com/user-attachments/assets/d0438e25-3aaf-426c-8297-8fe35fa5f57e)
+chaque seconde (par defaut) on recoit des nouveaux messages qui sont produits à partir de supplier creer qui presente comme ci un capteur
+si on va regler le timer et mettre de 200 ms:
+spring.cloud.stream.bindings.pageEventSupplier-out-0.producer.poller.fixed-delay=200
+
+maintenant on va faire du traitement en temps reel , le stream processing avec kafka stream , puisqu'on a des donneés chaque 200ms. qui contient des durations de visites sur lesquel on va se baser
+on va ajouter un kafka stream: et on creer un Function
+![image](https://github.com/user-attachments/assets/e7e0e803-197f-46a3-ac19-2d5e46885115)
+
+le kafka stream va prendre les données de supplier de T3 et le faire le stream et les operations necssaire et les renvoyer à T4
+![image](https://github.com/user-attachments/assets/a0a50235-f16d-4ea0-b3ad-fc45aafdb9c7)
+
+on doit restarer l'application encore une autre fois.
+et on doit lancer un autre commande pour ecouter (listen) au queue T4 , puisque c'est avec Kafka Stream. ( print.key=true -> on va ajouter la clé en parameter puisqe ce n'est affiché avant,
+property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer pour deserialiser la clé , et value.deserializer=org.apache.kafka.common.serialization.LongDeserializer pour
+desiialsé la valeur qui est de type long puisque la duration est de type long)
+=> docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T4 --property print.key=true --property print.value=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+
+![image](https://github.com/user-attachments/assets/59f72535-0dd5-4201-95a3-4b56dee206b5)
+
+toute est bien,
+
+maintenant on va ajouter des traitements dans le kafka stream poour l'analytics:
+du coup o n ajouter un group by clé , et count et stream pour l'afficher.
+![image](https://github.com/user-attachments/assets/a9568b0d-91d5-4c30-971e-648a3cc59e25)
+et on relance: ça va prendre un peu de temps pour faire le calcul (30 seconde par defaut pour voir le resultat):
+pour calculer le temps de visite
+![image](https://github.com/user-attachments/assets/e3da58fb-a8d6-445e-a18b-74ecaadf5784)
+pour changer la durée 30 seconde et avoir des resultats rapidement on ajoute ça :
+spring.cloud.stream.kafka.streams.binder.configuration.commit.interval.ms=1000
+ça devient plus rapide, chaque 1 secondes:
+![image](https://github.com/user-attachments/assets/948de9b1-6625-450f-99c6-45e9714ff8fd)
+
+le nombre de visite a augemente puisqu'on fait le cumul de visite.
+maintenant on va ajouter la tendance chaque 5 secondes; par exemple la page P1 est visité x fois pendant les 5 secondes (donc on va ajouter les operateurs de fenetrages)
+=> le count va concerné que les 5 derniers secondes.
+![image](https://github.com/user-attachments/assets/9cb567b6-9278-441e-a4d8-c7eb4ed8ec46)
+
+maintenant losqu'on va faire des operations des aggregations on va ajouter dans le count and Materlized pour publier en memoire une table count-store ou on va stocker les resulats:
+maintenant on va creer un api qui recupere les informations de count-store et l'envoyer vers le front end.
+![image](https://github.com/user-attachments/assets/fb688ce7-a6f9-48a8-95e1-7ec8a5dcd9c9)
+
+on redemarre l'application et si on tape sur l'api:
+http://localhost:8080/analytics
+![image](https://github.com/user-attachments/assets/94791e74-5dd2-4cee-b9d8-9c4e16c304cc)
+et ça vient de ces valeurs:
+![image](https://github.com/user-attachments/assets/f093f554-b6b6-4302-9c1a-28f227ec126f)
+
+en utilisant flux l'api est tjs on excution et il renvoie des donneés.
+maintenant on va creer une page index.html dans le dossier static ,et on va utiliser smoothie js pour afficher les courbes.
+et on entre dans la page:
+http://localhost:8080/index.html
+si on remarque ici : P1 est en vert et P2 est en rouge.
+
+![image](https://github.com/user-attachments/assets/7169111c-873c-49a0-b7be-e7e11d143f25)
+
+
+
+
+
 
 
 
