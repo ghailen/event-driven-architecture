@@ -219,5 +219,18 @@ on doit relancer l'api et on remarque qu'on a bien reçu le message dans T2:
 ![image](https://github.com/user-attachments/assets/f7229e08-9784-4dac-8902-d87d565bf1c1)
 
 
+maintenant on va creer un consumer coté spring:
+![image](https://github.com/user-attachments/assets/6bf26000-280f-4556-9a4a-58f487d86c0a)
+on va creer un bean (ç a  d il va etre charger au demarrage de l'application) 
+on va creer un objet consumer qui va faire un subscire sur un topic, il faut mettre le topic dans properties qui va etre consomer.
+spring.cloud.stream.bindings.pageEventConsumer-in-0.destination=T2
+&& spring.cloud.function.definition=pageEventConsumer
+![image](https://github.com/user-attachments/assets/40a57cda-66d8-43c2-aa64-fb328af0e31f)
+
+
+on relancer l'api, et on va remarquer que le message est bien consomé :
+![image](https://github.com/user-attachments/assets/06e4657b-e3b8-4321-b492-e836591f6826)
+
+
 
 
