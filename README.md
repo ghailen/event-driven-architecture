@@ -293,6 +293,7 @@ maintenant on va creer une page index.html dans le dossier static ,et on va util
 et on entre dans la page:
 http://localhost:8080/index.html
 si on remarque ici : P1 est en vert et P2 est en rouge.
+
 ![image](https://github.com/user-attachments/assets/7169111c-873c-49a0-b7be-e7e11d143f25)
 
 
