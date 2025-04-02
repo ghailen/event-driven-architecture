@@ -242,9 +242,10 @@ on redemarrer l'application et on va creer un consumer qui va lire de T3:
 docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T3
 ![image](https://github.com/user-attachments/assets/d0438e25-3aaf-426c-8297-8fe35fa5f57e)
 chaque seconde (par defaut) on recoit des nouveaux messages qui sont produits à partir de supplier creer qui presente comme ci un capteur
-si on va regler le timer et mettre de 2 secondes:
+si on va regler le timer et mettre de 200 ms:
 spring.cloud.stream.bindings.pageEventSupplier-out-0.producer.poller.fixed-delay=200
 
+maintenant on va faire du traitement en temps reel , le stream processing avec kafka stream , puisqu'on a des donneés chaque 200ms. qui contient des durations de visites sur lesquel on va se baser
 
 
 
