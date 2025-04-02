@@ -231,6 +231,19 @@ spring.cloud.stream.bindings.pageEventConsumer-in-0.destination=T2
 on relancer l'api, et on va remarquer que le message est bien consomé :
 ![image](https://github.com/user-attachments/assets/06e4657b-e3b8-4321-b492-e836591f6826)
 
+-------------------on va creer un supplier maintenant qui va jouer le role d'un producer qui va pusher un message à chaque minute ou seconde selon les donneés fournit en parameter----
+![image](https://github.com/user-attachments/assets/95cae349-613c-4173-be96-9538092221d2)
+et dans properties:
+spring.cloud.stream.bindings.pageEventSupplier-out-0.destination=T3
+&& spring.cloud.function.definition=pageEventConsumer;pageEventSupplier
+![image](https://github.com/user-attachments/assets/fe124418-46e5-4883-814a-64bae965f8f7)
+
+on redemarrer l'application et on va creer un consumer qui va lire de T3:
+docker exec --interactive --tty bdcc-kafka-broker kafka-console-consumer --bootstrap-server broker:9092 --topic T3
+![image](https://github.com/user-attachments/assets/d0438e25-3aaf-426c-8297-8fe35fa5f57e)
+chaque instant on recoit des nouveaux messages qui sont produits à partir de supplier creer qui presente comme ci un capteur
+
+
 
 
 
